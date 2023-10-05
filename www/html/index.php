@@ -1,3 +1,7 @@
+<?php
+?>
+
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -8,16 +12,30 @@
 </head>
 
 <body>
-  <form action="./index.php" method="post">
-    名前<input type="text" name="full-name" value=""><br>
-    Eメール<input type="email" name="email" value=""><br>
-    お問い合わせ内容<br>
-    <textarea name="message" cols="40" rows="8"></textarea><br>
-    <input type="submit" name=" button" value="確認">
+  <?php if ($_POST) { ?>
+    <!-- 確認画面 -->
+    <form action="./index.php" method="post">
+      名前
+      <?php echo $_POST['fullname'] ?><br>
+      Eメール
+      <?php echo $_POST['email'] ?><br>
+      お問い合わせ内容<br>
+      <?php echo nl2br($_POST['message']) ?><br>
+      <input type="submit" name="back" value="戻る" />
+      <input type="submit" name="send" value="送信" />
+    </form>
 
+  <?php } else { ?>
+    <!-- 入力画面 -->
+    <form action="./index.php" method="post">
+      名前<input type="text" name="fullname" value=""><br>
+      Eメール<input type="email" name="email" value=""><br>
+      お問い合わせ内容<br>
+      <textarea name="message" cols="40" rows="8"></textarea><br>
+      <input type="submit" name=" confirm" value="確認" />
+    </form>
 
-  </form>
-
+  <?php } ?>
 </body>
 
 </html>

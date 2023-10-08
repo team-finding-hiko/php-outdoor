@@ -1,5 +1,6 @@
 <?php
 $mode = 'input';
+// TODO 調べて入れる
 if (isset($_POST['back']) && $_POST['back']) {
   // TODO　処理を入れる
 } else if (isset($_POST['confirm']) && $_POST['confirm']) {

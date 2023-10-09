@@ -1,15 +1,34 @@
 <?php
-$mode = 'input';
-// TODO 調べて入れる
-if (isset($_POST['back']) && $_POST['back']) {
-  // TODO　処理を入れる
-} else if (isset($_POST['confirm']) && $_POST['confirm']) {
-  $mode = 'confirm';
-} else if (isset($_POST['send']) && $_POST['send']) {
-  $mode = 'send';
+session_start();
+$mode = "input";
+if (isset($_POST["back"]) && $_POST["back"]) {
+  $mode = "input";
+
+  // 何もしない
+} else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
+
+  $_SESSION["fullname"] = $_POST["fullname"];
+  $_SESSION["email"] = $_POST["email"];
+  $_SESSION["message"] = $_POST["message"];
+  $mode = "confirm";
+} else if (isset($_POST["send"]) && $_POST["send"]) {
+  // 送信ボタンを押したとき
+  $message = "お問い合わせを受け付けました \r\n"
+    . "名前:" . $_SESSION['fullname'] . "\r\n"
+    . "email:" . $_SESSION['email'] . "\r\n"
+    . "お問い合わせ内容:\r\n"
+    . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION['message']);
+
+  mail($_SESSION['email'], 'お問い合わせありがとうございます。', $message);
+  mail('vanmesia@yahoo.co.jp', 'お問い合わせありがとうございます', $message);
+  $_SESSION = array();
+
+  $mode = "send";
+} else {
+
+  $_SESSION = array();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -23,28 +42,27 @@ if (isset($_POST['back']) && $_POST['back']) {
   <?php if ($mode == 'input') { ?>
     <!-- 入力画面 -->
     <form action="./index.php" method="post">
-      名前<input type="text" name="fullname" value=""><br>
-      Eメール<input type="email" name="email" value=""><br>
+      名前 <input type="text" name="fullname" value="<?php echo $_SESSION['fullname'] ?>"><br>
+      Eメール <input type="email" name="email" value="<?php echo $_SESSION['email'] ?>"><br>
       お問い合わせ内容<br>
-      <textarea name="message" cols="40" rows="8"></textarea><br>
-      <input type="submit" name=" confirm" value="確認" />
+      <textarea cols="40" rows="8" name="message"><?php echo $_SESSION['message'] ?></textarea><br>
+      <input type="submit" name="confirm" value="確認" />
     </form>
   <?php } else if ($mode == 'confirm') { ?>
       <!-- 確認画面 -->
       <form action="./index.php" method="post">
         名前
-      <?php echo $_POST['fullname'] ?><br>
+      <?php echo $_SESSION['fullname'] ?><br>
         Eメール
-      <?php echo $_POST['email'] ?><br>
+      <?php echo $_SESSION['email'] ?><br>
         お問い合わせ内容<br>
-      <?php echo nl2br($_POST['message']) ?><br>
+      <?php echo nl2br($_SESSION['message']) ?><br>
         <input type="submit" name="back" value="戻る" />
         <input type="submit" name="send" value="送信" />
       </form>
-
   <?php } else { ?>
       <!-- 完了画面 -->
-
+      送信しました。お問い合わせありがとうございました<br>
   <?php } ?>
 </body>
 

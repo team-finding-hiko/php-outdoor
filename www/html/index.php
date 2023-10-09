@@ -2,12 +2,12 @@
 session_start();
 $mode = "input";
 if (isset($_POST["back"]) && $_POST["back"]) {
-  print "back";
+
   $mode = "input";
 
   // 何もしない
 } else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
-  print "confirm";
+
   $_SESSION["fullname"] = $_POST["fullname"];
   $_SESSION["email"] = $_POST["email"];
   $_SESSION["message"] = $_POST["message"];
@@ -23,10 +23,10 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   mail($_SESSION['email'], 'お問い合わせありがとうございます。', $message);
   mail('vanmesia@yahoo.co.jp', 'お問い合わせありがとうございます', $message);
   $_SESSION = array();
-  print "send";
+
   $mode = "send";
 } else {
-  print "array";
+
   $_SESSION = array();
 }
 ?>

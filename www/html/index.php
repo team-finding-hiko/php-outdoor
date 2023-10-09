@@ -2,7 +2,6 @@
 session_start();
 $mode = "input";
 if (isset($_POST["back"]) && $_POST["back"]) {
-
   $mode = "input";
 
   // 何もしない

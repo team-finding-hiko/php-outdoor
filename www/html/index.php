@@ -9,8 +9,6 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   // 何もしない
 } else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
   // 確認画面
-
-
   if (!$_POST['fullname']) {
     $errmessage[] = "名前を入力してください";
   } else if (mb_strlen($_POST['fullname']) > 100) {
@@ -46,30 +44,23 @@ if (isset($_POST["back"]) && $_POST["back"]) {
     $mode = "confirm";
   }
 
-} else if (isset($_POST["send"]) && $_POST["send"]) {
+} else if (isset($_POST['send']) && $_POST['send']) {
   // 送信ボタンを押したとき
-  if (!$_post['token'] || !$_SESSION['token'] || !$_SESSION['email']) {
+  if ($_POST['token'] != $_SESSION['token']) {
     $errmessage[] = '不正な処理が行われました';
     $_SESSION = array();
-    $mode = "input";
-  } else if ($_post['token'] != $_SESSION['token']) {
-    $errmessage[] = '不正な処理が行われました';
-    $_SESSION = array();
-    $mode = "input";
+    $mode = 'input';
   } else {
     $message = "お問い合わせを受け付けました \r\n"
-      . "名前:" . $_SESSION['fullname'] . "\r\n"
-      . "email:" . $_SESSION['email'] . "\r\n"
+      . "名前: " . $_SESSION['fullname'] . "\r\n"
+      . "email: " . $_SESSION['email'] . "\r\n"
       . "お問い合わせ内容:\r\n"
       . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION['message']);
-
-    mail($_SESSION['email'], 'お問い合わせありがとうございます。', $message);
-    mail('vanmesia@yahoo.co.jp', 'お問い合わせありがとうございます', $message);
+    mail($_SESSION['email'], 'お問い合わせありがとうございます', $message);
+    mail('uemura@hoge.com', 'お問い合わせありがとうございます', $message);
     $_SESSION = array();
-
-    $mode = "send";
+    $mode = 'send';
   }
-
 } else {
 
   $_SESSION = array();
@@ -109,7 +100,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
     ?>
 
     <form action="./index.php" method="post">
-      <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+
 
       名前 <input type="text" class="form-control" name="fullname" value="<?php echo $_SESSION['fullname'] ?>"><br>
       Eメール <input type="email" class="form-control" name="email" value="<?php echo $_SESSION['email'] ?>"><br>
@@ -121,6 +112,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   <?php } else if ($mode == 'confirm') { ?>
       <!-- 確認画面 -->
       <form action="./index.php" method="post">
+        <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
         名前
       <?php echo $_SESSION['fullname'] ?><br>
         Eメール

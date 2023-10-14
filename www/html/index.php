@@ -82,6 +82,19 @@ if (isset($_POST["back"]) && $_POST["back"]) {
 <head>
   <meta charset="utf-8">
   <title>お問い合わせフォーム</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    body {
+      padding: 10px;
+      max-width: 600px;
+      margin: 0px auto;
+    }
+
+    div.button {
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
@@ -89,7 +102,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
     <!-- 入力画面 -->
     <?php
     if ($errmessage) {
-      echo '<div style="color:red;">';
+      echo '<div class="alert alert-danger" role="alert">';
       echo implode('<br>', $errmessage);
       echo '</div>';
     }
@@ -97,11 +110,13 @@ if (isset($_POST["back"]) && $_POST["back"]) {
 
     <form action="./index.php" method="post">
       <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-      名前 <input type="text" name="fullname" value="<?php echo $_SESSION['fullname'] ?>"><br>
-      Eメール <input type="email" name="email" value="<?php echo $_SESSION['email'] ?>"><br>
+
+      名前 <input type="text" class="form-control" name="fullname" value="<?php echo $_SESSION['fullname'] ?>"><br>
+      Eメール <input type="email" class="form-control" name="email" value="<?php echo $_SESSION['email'] ?>"><br>
       お問い合わせ内容<br>
-      <textarea cols="40" rows="8" name="message"><?php echo $_SESSION['message'] ?></textarea><br>
-      <input type="submit" name="confirm" value="確認" />
+      <textarea cols="40" rows="8" name="message" class="form-control"><?php echo $_SESSION['message'] ?></textarea><br>
+      <div class="button"><input type="submit" name="confirm" value="確認" class="btn btn-primary mb-3 btn-lg" /></div>
+
     </form>
   <?php } else if ($mode == 'confirm') { ?>
       <!-- 確認画面 -->
@@ -112,8 +127,8 @@ if (isset($_POST["back"]) && $_POST["back"]) {
       <?php echo $_SESSION['email'] ?><br>
         お問い合わせ内容<br>
       <?php echo nl2br($_SESSION['message']) ?><br>
-        <input type="submit" name="back" value="戻る" />
-        <input type="submit" name="send" value="送信" />
+        <input type="submit" name="back" value="戻る" class="btn btn-primary mb-3 btn-lg" />
+        <input type="submit" name="send" value="送信" class="btn btn-primary mb-3 btn-lg" />
       </form>
   <?php } else { ?>
       <!-- 完了画面 -->

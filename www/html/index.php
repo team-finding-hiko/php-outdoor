@@ -36,25 +36,40 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   }
   $_SESSION["message"] = htmlspecialchars($_POST['message'], ENT_QUOTES);
 
+
   if ($errmessage) {
     $mode = "input";
   } else {
+    $token = bin2hex(random_bytes(32));
+    $_SESSION['token'] = $token;
+
     $mode = "confirm";
   }
 
 } else if (isset($_POST["send"]) && $_POST["send"]) {
   // 送信ボタンを押したとき
-  $message = "お問い合わせを受け付けました \r\n"
-    . "名前:" . $_SESSION['fullname'] . "\r\n"
-    . "email:" . $_SESSION['email'] . "\r\n"
-    . "お問い合わせ内容:\r\n"
-    . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION['message']);
+  if (!$_post['token'] || !$_SESSION['token'] || !$_SESSION['email']) {
+    $errmessage[] = '不正な処理が行われました';
+    $_SESSION = array();
+    $mode = "input";
+  } else if ($_post['token'] != $_SESSION['token']) {
+    $errmessage[] = '不正な処理が行われました';
+    $_SESSION = array();
+    $mode = "input";
+  } else {
+    $message = "お問い合わせを受け付けました \r\n"
+      . "名前:" . $_SESSION['fullname'] . "\r\n"
+      . "email:" . $_SESSION['email'] . "\r\n"
+      . "お問い合わせ内容:\r\n"
+      . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION['message']);
 
-  mail($_SESSION['email'], 'お問い合わせありがとうございます。', $message);
-  mail('vanmesia@yahoo.co.jp', 'お問い合わせありがとうございます', $message);
-  $_SESSION = array();
+    mail($_SESSION['email'], 'お問い合わせありがとうございます。', $message);
+    mail('vanmesia@yahoo.co.jp', 'お問い合わせありがとうございます', $message);
+    $_SESSION = array();
 
-  $mode = "send";
+    $mode = "send";
+  }
+
 } else {
 
   $_SESSION = array();
@@ -81,6 +96,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
     ?>
 
     <form action="./index.php" method="post">
+      <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
       名前 <input type="text" name="fullname" value="<?php echo $_SESSION['fullname'] ?>"><br>
       Eメール <input type="email" name="email" value="<?php echo $_SESSION['email'] ?>"><br>
       お問い合わせ内容<br>

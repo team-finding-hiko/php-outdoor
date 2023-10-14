@@ -1,4 +1,10 @@
 <?php
+$kind = array();
+$kind[1] = '質問';
+$kind[2] = 'ご意見';
+$kind[3] = '資料請求';
+
+
 session_start();
 $mode = "input";
 $errmessage = array();
@@ -25,6 +31,17 @@ if (isset($_POST["back"]) && $_POST["back"]) {
     $errmessage[] = "メールアドレスが不正です";
   }
   $_SESSION["email"] = htmlspecialchars($_POST['email'], ENT_QUOTES);
+
+
+  if (!$_POST['mkind']) {
+    $errmessage[] = "種別を入力してください";
+  } else if ($_POST['mkind'] <= 0 || $_POST['mkind'] >= 4) {
+    $errmessage[] = "種別が不正です";
+  }
+  $_SESSION["mkind"] = htmlspecialchars($_POST['mkind'], ENT_QUOTES);
+
+
+
 
 
   if (!$_POST['message']) {
@@ -54,6 +71,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
     $message = "お問い合わせを受け付けました \r\n"
       . "名前: " . $_SESSION['fullname'] . "\r\n"
       . "email: " . $_SESSION['email'] . "\r\n"
+      . "種別: " . $kind[$_SESSION['mkind']] . "\r\n"
       . "お問い合わせ内容:\r\n"
       . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION['message']);
     mail($_SESSION['email'], 'お問い合わせありがとうございます', $message);
@@ -62,8 +80,10 @@ if (isset($_POST["back"]) && $_POST["back"]) {
     $mode = 'send';
   }
 } else {
-
-  $_SESSION = array();
+  $_SESSION['fullname'] = "";
+  $_SESSION['email'] = "";
+  $_SESSION['mkind'] = "";
+  $_SESSION['message'] = "";
 }
 ?>
 
@@ -104,6 +124,16 @@ if (isset($_POST["back"]) && $_POST["back"]) {
 
       名前 <input type="text" class="form-control" name="fullname" value="<?php echo $_SESSION['fullname'] ?>"><br>
       Eメール <input type="email" class="form-control" name="email" value="<?php echo $_SESSION['email'] ?>"><br>
+      種別：
+      <select name="mkind" class="form-control">
+        <?php foreach ($kind as $i => $v) { ?>
+          <?php if ($_SESSION['mkind'] == $i) { ?>
+            <option value="<?php echo $i ?>" selected><?php echo $v ?></option>
+          <?php } else { ?>
+            <option value="<?php echo $i ?>"><?php echo $v ?></option>
+          <?php } ?>
+        <?php } ?>
+      </select><br>
       お問い合わせ内容<br>
       <textarea cols="40" rows="8" name="message" class="form-control"><?php echo $_SESSION['message'] ?></textarea><br>
       <div class="button"><input type="submit" name="confirm" value="確認" class="btn btn-primary mb-3 btn-lg" /></div>
@@ -117,6 +147,8 @@ if (isset($_POST["back"]) && $_POST["back"]) {
       <?php echo $_SESSION['fullname'] ?><br>
         Eメール
       <?php echo $_SESSION['email'] ?><br>
+        種別
+      <?php echo $_kind[$_SESSION['mkind']] ?><br>
         お問い合わせ内容<br>
       <?php echo nl2br($_SESSION['message']) ?><br>
         <input type="submit" name="back" value="戻る" class="btn btn-primary mb-3 btn-lg" />

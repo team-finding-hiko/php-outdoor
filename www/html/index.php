@@ -39,10 +39,6 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   }
   $_SESSION["inquiry_type_key"] = htmlspecialchars($_POST['inquiry_type_key'], ENT_QUOTES);
 
-
-
-
-
   if (!$_POST['message']) {
     $errmessage[] = "お問い合わせ内容を入力してください";
   } else if (mb_strlen($_POST['message']) > 500) {

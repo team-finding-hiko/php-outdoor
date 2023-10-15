@@ -147,7 +147,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
         Eメール
       <?php echo $_SESSION['email'] ?><br>
         種別
-      <?php echo $_kind[$_SESSION['inquiry_type_key']] ?><br>
+      <?php echo $inquiry_type[$_SESSION['inquiry_type_key']] ?><br>
         お問い合わせ内容<br>
       <?php echo nl2br($_SESSION['message']) ?><br>
         <input type="submit" name="back" value="戻る" class="btn btn-primary mb-3 btn-lg" />

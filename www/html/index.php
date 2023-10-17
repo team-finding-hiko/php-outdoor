@@ -34,7 +34,9 @@ if (isset($_POST["back"]) && $_POST["back"]) {
 
   if (!$_POST['inquiry_type_key']) {
     $errmessage[] = "種別を入力してください";
-  } else if ($_POST['inquiry_type_key'] <= 0 || $_POST['inquiry_type_key'] > 3) {
+  } else if (
+    $_POST['inquiry_type_key'] <= 0 || 3 < $_POST['inquiry_type_key']
+  ) {
     $errmessage[] = "種別が不正です";
   }
   $_SESSION["inquiry_type_key"] = htmlspecialchars($_POST['inquiry_type_key'], ENT_QUOTES);

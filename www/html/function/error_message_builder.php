@@ -73,7 +73,7 @@ class MailErrorMessageBuilder
 
   public function getErrorMessage()
   {
-    if (!$_POST['email']) {
+    if (!$_POST[$this->form_field_name]) {
       return "Eメールを入力してください";
     } else if (mb_strlen($_POST[$this->form_field_name]) > 200) {
       return "Eメールは200文字以内にしてください";

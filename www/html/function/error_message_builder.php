@@ -75,9 +75,9 @@ class MailErrorMessageBuilder
   {
     if (!$_POST['email']) {
       return "Eメールを入力してください";
-    } else if (mb_strlen($_POST['email']) > 200) {
+    } else if (mb_strlen($_POST[$this->form_field_name]) > 200) {
       return "Eメールは200文字以内にしてください";
-    } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    } else if (!filter_var($_POST[$this->form_field_name], FILTER_VALIDATE_EMAIL)) {
       return "メールアドレスが不正です";
     }
     return "";

@@ -6,6 +6,7 @@ require_once('./function/error_message_builder.php');
 // $pot->addWater(10);
 // print($pot->getWater());
 $name_error_message_builder = new NameErrorMessageBuilder;
+$mail_error_message_builder = new MailErrorMessageBuilder;
 $inquiry_type = array();
 $inquiry_type[0] = '種別を選択してください';
 $inquiry_type[1] = '質問';
@@ -21,17 +22,11 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   // 何もしない
 } else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
   // 確認画面
-  $errmessage[] = $nama_error_message_builder->getErrorMessage();
+  $errmessage[] = $name_error_message_builder->getErrorMessage();
   $_SESSION["fullname"] = htmlspecialchars($_POST['fullname'], ENT_QUOTES);
 
 
-  if (!$_POST['email']) {
-    $errmessage[] = "Eメールを入力してください";
-  } else if (mb_strlen($_POST['email']) > 200) {
-    $errmessage[] = "Eメールは200文字以内にしてください";
-  } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-    $errmessage[] = "メールアドレスが不正です";
-  }
+  $errmessage[] = $mail_error_message_builder->getErrorMessage();
   $_SESSION["email"] = htmlspecialchars($_POST['email'], ENT_QUOTES);
 
   if (!$_POST['inquiry_type_key']) {

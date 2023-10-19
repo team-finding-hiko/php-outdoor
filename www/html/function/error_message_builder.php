@@ -52,4 +52,34 @@ class NameErrorMessageBuilder
     return "";
   }
 }
+
+class MailErrorMessageBuilder
+{
+
+  // クラスの状態（車でいう速度）
+  private $form_field_name;
+
+  function __construct()
+  {
+    $this->form_field_name = "email";
+  }
+
+  // クラスの状態に関するメソッド（確認：車でいうメーター）
+  public function getFormFieldName()
+  {
+    return $this->form_field_name;
+  }
+
+  public function getErrorMessage()
+  {
+    if (!$_POST['email']) {
+      return "Eメールを入力してください";
+    } else if (mb_strlen($_POST['email']) > 200) {
+      return "Eメールは200文字以内にしてください";
+    } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+      return "メールアドレスが不正です";
+    }
+    return "";
+  }
+}
 ?>

@@ -24,7 +24,7 @@
 //   }
 // }
 
-// 名前を入れた時に返却するクラス
+// 名前を入れた時にエラーメッセージを返却するクラス
 class NameErrorMessageBuilder
 {
 
@@ -53,6 +53,7 @@ class NameErrorMessageBuilder
   }
 }
 
+// 名前を入れた時にエラーメッセージを返却するクラス
 class MailErrorMessageBuilder
 {
 

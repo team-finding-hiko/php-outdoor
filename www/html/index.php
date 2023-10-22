@@ -6,6 +6,7 @@ const EMAIL = "email";
 const INQUIRY_TYPE_KEY = "inquiry_type_key";
 const INQUIRY_CONTENTS = "inquiry_contents";
 const INPUT = "input";
+const BACK = "back";
 // ############################################################################
 session_start();
 
@@ -27,7 +28,7 @@ $mode = INPUT;
 $temporarily_errormessage = array();
 $error_message = array();
 // TODO クラス化検討
-if (isset($_POST["back"]) && $_POST["back"]) {
+if (isset($_POST[BACK]) && $_POST[BACK]) {
   $mode = INPUT;
 
   // 何もしない
@@ -147,7 +148,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
       <?php echo $inquiry_type[$_SESSION[INQUIRY_TYPE_KEY]] ?><br>
         お問い合わせ内容<br>
       <?php echo nl2br($_SESSION[INQUIRY_CONTENTS]) ?><br>
-        <input type="submit" name="back" value="戻る" class="btn btn-primary mb-3 btn-lg" />
+        <input type="submit" name=BACK value="戻る" class="btn btn-primary mb-3 btn-lg" />
         <input type="submit" name="send" value="送信" class="btn btn-primary mb-3 btn-lg" />
       </form>
   <?php } else { ?>

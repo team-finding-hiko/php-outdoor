@@ -59,7 +59,7 @@ class MailErrorMessageBuilder
 {
 
   // クラスの状態（車でいう速度）
-  private $form_field_name;
+  private string $form_field_name;
 
   function __construct()
   {
@@ -67,12 +67,12 @@ class MailErrorMessageBuilder
   }
 
   // クラスの状態に関するメソッド（確認：車でいうメーター）
-  public function getFormFieldName()
+  public function getFormFieldName(): string
   {
     return $this->form_field_name;
   }
 
-  public function getErrorMessage()
+  public function getErrorMessage(): ?string
   {
     if (!$_POST[$this->form_field_name]) {
       return "Eメールを入力してください";

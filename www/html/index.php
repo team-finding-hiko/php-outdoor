@@ -1,27 +1,34 @@
 <?php
+// 定数
+// ############################################################################
 const FULL_NAME = "full_name";
 const EMAIL = "email";
 const INQUIRY_TYPE_KEY = "inquiry_type_key";
 const INQUIRY_CONTENTS = "inquiry_contents";
+const INPUT = "input";
+// ############################################################################
 session_start();
 
 require_once('./function/error_message_builder.php');
+// TODO 引数の設定
 $name_error_message_builder = new NameErrorMessageBuilder;
 $mail_error_message_builder = new MailErrorMessageBuilder;
 $inquiry_type_error_message_builder = new InquiryTypeErrorMessageBuilder;
 $message_error_message_builder = new MessageErrorMessageBuilder;
 $inquiry_type = array();
-
+// TODO ENUM化
 $inquiry_type[0] = '種別を選択してください';
 $inquiry_type[1] = '質問';
 $inquiry_type[2] = 'ご意見';
 $inquiry_type[3] = '資料請求';
 
-$mode = "input";
+
+$mode = INPUT;
 $temporarily_errormessage = array();
 $error_message = array();
+// TODO クラス化検討
 if (isset($_POST["back"]) && $_POST["back"]) {
-  $mode = "input";
+  $mode = INPUT;
 
   // 何もしない
 } else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
@@ -42,7 +49,7 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   // エラーメッセージの中のnullや空文字を除去する
   $error_message = array_filter($temporarily_errormessage);
   if ($error_message) {
-    $mode = "input";
+    $mode = INPUT;
   } else {
     $token = bin2hex(random_bytes(32));
     $_SESSION['token'] = $token;

@@ -8,6 +8,7 @@ const INQUIRY_CONTENTS = "inquiry_contents";
 const INPUT = "input";
 const BACK = "back";
 const CONFIRM = "confirm";
+const TOKEN = "token";
 // ############################################################################
 session_start();
 
@@ -54,13 +55,13 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
     $mode = INPUT;
   } else {
     $token = bin2hex(random_bytes(32));
-    $_SESSION['token'] = $token;
+    $_SESSION[TOKEN] = $token;
     $mode = CONFIRM;
   }
 
 } else if (isset($_POST['send']) && $_POST['send']) {
   // 送信ボタンを押したとき
-  if ($_POST['token'] != $_SESSION['token']) {
+  if ($_POST[TOKEN] != $_SESSION[TOKEN]) {
     $temporarily_errormessage[] = '不正な処理が行われました';
     $_SESSION = array();
     $mode = INPUT;
@@ -140,7 +141,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
   <?php } else if ($mode == CONFIRM) { ?>
       <!-- 確認画面 -->
       <form action="./index.php" method="post">
-        <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+        <input type="hidden" name="token" value="<?php echo $_SESSION[TOKEN]; ?>">
         名前
       <?php echo $_SESSION[FULL_NAME] ?><br>
         Eメール

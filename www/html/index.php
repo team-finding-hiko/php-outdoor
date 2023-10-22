@@ -9,6 +9,7 @@ const INPUT = "input";
 const BACK = "back";
 const CONFIRM = "confirm";
 const TOKEN = "token";
+const SEND = "send";
 // ############################################################################
 session_start();
 
@@ -59,7 +60,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
     $mode = CONFIRM;
   }
 
-} else if (isset($_POST['send']) && $_POST['send']) {
+} else if (isset($_POST[SEND]) && $_POST[SEND]) {
   // 送信ボタンを押したとき
   if ($_POST[TOKEN] != $_SESSION[TOKEN]) {
     $temporarily_errormessage[] = '不正な処理が行われました';
@@ -73,9 +74,9 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
       . "お問い合わせ内容:\r\n"
       . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION[INQUIRY_CONTENTS]);
     mail($_SESSION[EMAIL], 'お問い合わせありがとうございます', $message);
-    mail('uemura@hoge.com', 'お問い合わせありがとうございます', $message);
+    mail('ok919872i@gmail.com', 'お問い合わせありがとうございます', $message);
     $_SESSION = array();
-    $mode = 'send';
+    $mode = SEND;
   }
 } else {
   $_SESSION[FULL_NAME] = "";

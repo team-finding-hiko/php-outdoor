@@ -7,6 +7,7 @@ const INQUIRY_TYPE_KEY = "inquiry_type_key";
 const INQUIRY_CONTENTS = "inquiry_contents";
 const INPUT = "input";
 const BACK = "back";
+const CONFIRM = "confirm";
 // ############################################################################
 session_start();
 
@@ -32,7 +33,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
   $mode = INPUT;
 
   // 何もしない
-} else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
+} else if (isset($_POST[CONFIRM]) && $_POST[CONFIRM]) {
   // 確認画面
 
   $temporarily_errormessage[] = $name_error_message_builder->getErrorMessage();
@@ -54,7 +55,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
   } else {
     $token = bin2hex(random_bytes(32));
     $_SESSION['token'] = $token;
-    $mode = "confirm";
+    $mode = CONFIRM;
   }
 
 } else if (isset($_POST['send']) && $_POST['send']) {
@@ -62,7 +63,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
   if ($_POST['token'] != $_SESSION['token']) {
     $temporarily_errormessage[] = '不正な処理が行われました';
     $_SESSION = array();
-    $mode = 'input';
+    $mode = INPUT;
   } else {
     $message = "お問い合わせを受け付けました \r\n"
       . "名前: " . $_SESSION[FULL_NAME] . "\r\n"
@@ -105,7 +106,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
 </head>
 
 <body>
-  <?php if ($mode == 'input') { ?>
+  <?php if ($mode == INPUT) { ?>
     <!-- 入力画面 -->
     <?php
     if ($error_message) {
@@ -133,10 +134,10 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
       お問い合わせ内容<br>
       <textarea cols="40" rows="8" name="<?php echo INQUIRY_CONTENTS ?>"
         class="form-control"><?php echo $_SESSION[INQUIRY_CONTENTS] ?></textarea><br>
-      <div class="button"><input type="submit" name="confirm" value="確認" class="btn btn-primary mb-3 btn-lg" /></div>
+      <div class="button"><input type="submit" name=CONFIRM value="確認" class="btn btn-primary mb-3 btn-lg" /></div>
 
     </form>
-  <?php } else if ($mode == 'confirm') { ?>
+  <?php } else if ($mode == CONFIRM) { ?>
       <!-- 確認画面 -->
       <form action="./index.php" method="post">
         <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">

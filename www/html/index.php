@@ -8,7 +8,9 @@ require_once('./function/error_message_builder.php');
 // print($pot->getWater());
 $name_error_message_builder = new NameErrorMessageBuilder;
 $mail_error_message_builder = new MailErrorMessageBuilder;
+$inquiry_type_error_message_builder = new InquiryTypeErrorMessageBuilder;
 $inquiry_type = array();
+
 $inquiry_type[0] = '種別を選択してください';
 $inquiry_type[1] = '質問';
 $inquiry_type[2] = 'ご意見';
@@ -19,29 +21,19 @@ $errmessage = array();
 if (isset($_POST["back"]) && $_POST["back"]) {
   $mode = "input";
 
-
   // 何もしない
 } else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
   // 確認画面
-  // $errmessage[] = $name_error_message_builder->getErrorMessage();
   $error[] = $name_error_message_builder->getErrorMessage();
-  $name_error_message_builder->getFormFieldName(1);
   $errormessage[] = array_filter($error);
   $_SESSION["fullname"] = htmlspecialchars($_POST['fullname'], ENT_QUOTES);
 
-
-  // $errmessage[] = $mail_error_message_builder->getErrorMessage();
   $error[] = $mail_error_message_builder->getErrorMessage();
   $errormessage[] = array_filter($error);
   $_SESSION["email"] = htmlspecialchars($_POST['email'], ENT_QUOTES);
 
-  if (!$_POST['inquiry_type_key']) {
-    $errmessage[] = "種別を入力してください";
-  } else if (
-    $_POST['inquiry_type_key'] <= 0 || 3 < $_POST['inquiry_type_key']
-  ) {
-    $errmessage[] = "種別が不正です";
-  }
+  $error[] = $inquiry_type_error_message_builder->getErrorMessage();
+  $errormessage[] = array_filter($error);
   $_SESSION["inquiry_type_key"] = htmlspecialchars($_POST['inquiry_type_key'], ENT_QUOTES);
 
   if (!$_POST['message']) {

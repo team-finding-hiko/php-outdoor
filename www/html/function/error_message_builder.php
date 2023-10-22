@@ -85,4 +85,33 @@ class MailErrorMessageBuilder
   }
 }
 
+class InquiryTypeErrorMessageBuilder
+{
+
+  // クラスの状態（車でいう速度）
+  private string $form_field_name;
+
+  function __construct()
+  {
+    $this->form_field_name = "inquiry_type_key";
+  }
+
+  // クラスの状態に関するメソッド（確認：車でいうメーター）
+  public function getFormFieldName(): string
+  {
+    return $this->form_field_name;
+  }
+
+  public function getErrorMessage(): ?string
+  {
+    if (!$_POST[$this->form_field_name]) {
+      return "種別を選択してください";
+    } else if (
+      $_POST[$this->form_field_name] <= 0 || 3 < $_POST[$this->form_field_name]
+    ) {
+      return "種別が不正です";
+    }
+    return null;
+  }
+}
 ?>

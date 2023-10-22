@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once('./function/error_message_builder.php');
 // $pot = new Pot;
 // $pot->addWater(10);
@@ -22,11 +23,16 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   // 何もしない
 } else if (isset($_POST["confirm"]) && $_POST["confirm"]) {
   // 確認画面
-  $errmessage[] = $name_error_message_builder->getErrorMessage();
+  // $errmessage[] = $name_error_message_builder->getErrorMessage();
+  $error[] = $name_error_message_builder->getErrorMessage();
+  $name_error_message_builder->getFormFieldName(1);
+  $errormessage[] = array_filter($error);
   $_SESSION["fullname"] = htmlspecialchars($_POST['fullname'], ENT_QUOTES);
 
 
-  $errmessage[] = $mail_error_message_builder->getErrorMessage();
+  // $errmessage[] = $mail_error_message_builder->getErrorMessage();
+  $error[] = $mail_error_message_builder->getErrorMessage();
+  $errormessage[] = array_filter($error);
   $_SESSION["email"] = htmlspecialchars($_POST['email'], ENT_QUOTES);
 
   if (!$_POST['inquiry_type_key']) {

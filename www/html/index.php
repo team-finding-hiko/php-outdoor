@@ -9,6 +9,7 @@ require_once('./function/error_message_builder.php');
 $name_error_message_builder = new NameErrorMessageBuilder;
 $mail_error_message_builder = new MailErrorMessageBuilder;
 $inquiry_type_error_message_builder = new InquiryTypeErrorMessageBuilder;
+$message_error_message_builder = new MessageErrorMessageBuilder;
 $inquiry_type = array();
 
 $inquiry_type[0] = '種別を選択してください';
@@ -36,20 +37,15 @@ if (isset($_POST["back"]) && $_POST["back"]) {
   $errormessage[] = array_filter($error);
   $_SESSION["inquiry_type_key"] = htmlspecialchars($_POST['inquiry_type_key'], ENT_QUOTES);
 
-  if (!$_POST['message']) {
-    $errmessage[] = "お問い合わせ内容を入力してください";
-  } else if (mb_strlen($_POST['message']) > 500) {
-    $errmessage[] = "お問い合わせ内容は500文字以内にしてください";
-  }
+  $error[] = $message_error_message_builder->getErrorMessage();
+  $errormessage[] = array_filter($error);
   $_SESSION["message"] = htmlspecialchars($_POST['message'], ENT_QUOTES);
-
 
   if ($errmessage) {
     $mode = "input";
   } else {
     $token = bin2hex(random_bytes(32));
     $_SESSION['token'] = $token;
-
     $mode = "confirm";
   }
 

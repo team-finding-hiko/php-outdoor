@@ -114,4 +114,34 @@ class InquiryTypeErrorMessageBuilder
     return null;
   }
 }
+
+class MessageErrorMessageBuilder
+{
+
+  // クラスの状態（車でいう速度）
+  private string $form_field_name;
+
+  function __construct()
+  {
+    $this->form_field_name = "message";
+  }
+
+  // クラスの状態に関するメソッド（確認：車でいうメーター）
+  public function getFormFieldName(): string
+  {
+    return $this->form_field_name;
+  }
+
+  public function getErrorMessage(): ?string
+  {
+    if (!$_POST[$this->form_field_name]) {
+      return "お問い合わせ内容を入力してください";
+    } else if (mb_strlen($_POST[$this->form_field_name]) > 500) {
+      return "お問い合わせ内容は500文字以内にしてください";
+    }
+    return null;
+  }
+}
+
+
 ?>

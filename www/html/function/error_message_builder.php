@@ -1,31 +1,6 @@
 <?php
-// class Pot
-// {
-
-//   // クラスの状態（車でいう速度）
-//   private $water;
-
-//   // クラスの状態の初期化（1回だけ呼ばれる）
-//   function __construct()
-//   {
-//     $this->water = 0;
-//   }
-
-//   // クラスの状態に関するメソッド（変更：車でいうアクセル）
-//   public function addWater($car)
-//   {
-//     $this->water += $car;
-//   }
-
-//   // クラスの状態に関するメソッド（確認：車でいうメーター）
-//   public function getWater()
-//   {
-//     return $this->water;
-//   }
-// }
 
 // 名前を入れた時にエラーメッセージを返却するクラス
-
 class NameErrorMessageBuilder
 {
 
@@ -34,7 +9,7 @@ class NameErrorMessageBuilder
 
   function __construct()
   {
-    $this->form_field_name = "fullname";
+    $this->form_field_name = FULL_NAME;
   }
 
   // クラスの状態に関するメソッド（確認：車でいうメーター）
@@ -63,7 +38,7 @@ class MailErrorMessageBuilder
 
   function __construct()
   {
-    $this->form_field_name = "email";
+    $this->form_field_name = EMAIL;
   }
 
   // クラスの状態に関するメソッド（確認：車でいうメーター）
@@ -123,7 +98,7 @@ class MessageErrorMessageBuilder
 
   function __construct()
   {
-    $this->form_field_name = "message";
+    $this->form_field_name = INQUIRY_CONTENTS;
   }
 
   // クラスの状態に関するメソッド（確認：車でいうメーター）

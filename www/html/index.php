@@ -121,7 +121,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
 
       名前 <input type="text" class="form-control" name="<?php echo FULL_NAME ?>"
         value="<?php echo $_SESSION[FULL_NAME] ?>"><br>
-      Eメール <input type=EMAIL class="form-control" name="<?php echo EMAIL ?>" value="<?php echo $_SESSION[EMAIL] ?>"><br>
+      Eメール <input type="email" class="form-control" name="<?php echo EMAIL ?>" value="<?php echo $_SESSION[EMAIL] ?>"><br>
       種別：
       <select name="<?php echo INQUIRY_TYPE_KEY ?>" class="form-control">
         <?php foreach ($inquiry_type as $inquiry_type_key => $inquiry_type_value) { ?>
@@ -135,7 +135,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
       お問い合わせ内容<br>
       <textarea cols="40" rows="8" name="<?php echo INQUIRY_CONTENTS ?>"
         class="form-control"><?php echo $_SESSION[INQUIRY_CONTENTS] ?></textarea><br>
-      <div class="button"><input type="submit" name=CONFIRM value="確認" class="btn btn-primary mb-3 btn-lg" /></div>
+      <div class="button"><input type="submit" name="confirm" value="確認" class="btn btn-primary mb-3 btn-lg" /></div>
 
     </form>
   <?php } else if ($mode == CONFIRM) { ?>
@@ -150,7 +150,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
       <?php echo $inquiry_type[$_SESSION[INQUIRY_TYPE_KEY]] ?><br>
         お問い合わせ内容<br>
       <?php echo nl2br($_SESSION[INQUIRY_CONTENTS]) ?><br>
-        <input type="submit" name=BACK value="戻る" class="btn btn-primary mb-3 btn-lg" />
+        <input type="submit" name="back" value="戻る" class="btn btn-primary mb-3 btn-lg" />
         <input type="submit" name="send" value="送信" class="btn btn-primary mb-3 btn-lg" />
       </form>
   <?php } else { ?>

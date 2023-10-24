@@ -15,11 +15,13 @@ session_start();
 // phpinfo();
 
 require_once('./function/error_message_builder.php');
+require_once('./function/test_clas.php');
 // TODO 引数の設定
 $name_error_message_builder = new NameErrorMessageBuilder;
 $mail_error_message_builder = new MailErrorMessageBuilder;
 $inquiry_type_error_message_builder = new InquiryTypeErrorMessageBuilder;
 $message_error_message_builder = new MessageErrorMessageBuilder;
+
 $inquiry_type = array();
 // TODO ENUM化
 $inquiry_type[0] = '種別を選択してください';
@@ -68,14 +70,21 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
     $_SESSION = array();
     $mode = INPUT;
   } else {
-    $message = "お問い合わせを受け付けました \r\n"
-      . "名前: " . $_SESSION[FULL_NAME] . "\r\n"
-      . "email: " . $_SESSION[EMAIL] . "\r\n"
-      . "種別: " . $inquiry_type[$_SESSION[INQUIRY_TYPE_KEY]] . "\r\n"
-      . "お問い合わせ内容:\r\n"
-      . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION[INQUIRY_CONTENTS]);
-    mail($_SESSION[EMAIL], 'お問い合わせありがとうございます', $message);
-    mail('ok919872i@gmail.com', 'お問い合わせありがとうございます', $message);
+    // メール関連をコントロールするクラスの作成
+    $mail_controller = new MailControllerClass($inquiry_type);
+    // メール用のメッセージの作成
+    $message = $mail_controller->create_message();
+    // メール送信
+    $mail_controller->send_mail($message);
+
+    // $message = "お問い合わせを受け付けました \r\n"
+    //   . "名前: " . $_SESSION[FULL_NAME] . "\r\n"
+    //   . "email: " . $_SESSION[EMAIL] . "\r\n"
+    //   . "種別: " . $inquiry_type[$_SESSION[INQUIRY_TYPE_KEY]] . "\r\n"
+    //   . "お問い合わせ内容:\r\n"
+    //   . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION[INQUIRY_CONTENTS]);
+    // mail($_SESSION[EMAIL], 'お問い合わせありがとうございます', $message);
+    // mail('ok919872i@gmail.com', 'お問い合わせありがとうございます', $message);
     $_SESSION = array();
     $mode = SEND;
   }

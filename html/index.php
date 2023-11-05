@@ -14,69 +14,63 @@ const SEND = "send";
 session_start();
 // phpinfo();
 
+// 必要ファイルのインポート
 require_once('./function/error_message_builder.php');
 require_once('./function/test_clas.php');
-// TODO 引数の設定
-$name_error_message_builder = new NameErrorMessageBuilder;
-$mail_error_message_builder = new MailErrorMessageBuilder;
-$inquiry_type_error_message_builder = new InquiryTypeErrorMessageBuilder;
-$message_error_message_builder = new MessageErrorMessageBuilder;
 
-$inquiry_type = array();
+// クラスのインスタンス化
+// $name_error_message_builder = new NameErrorMessageBuilder;
+// $mail_error_message_builder = new MailErrorMessageBuilder;
+// $inquiry_type_error_message_builder = new InquiryTypeErrorMessageBuilder;
+// $message_error_message_builder = new MessageErrorMessageBuilder;
+$error_message_builder = new ErrorMessageBuilder;
+
+$session_controller = new SessionControll($_SESSION);
+$action_state_check = new ActionStateCheck($_POST);
+$mode = new Mode;
+
 // TODO ENUM化
+$inquiry_type = array();
 $inquiry_type[0] = '種別を選択してください';
 $inquiry_type[1] = '質問';
 $inquiry_type[2] = 'ご意見';
 $inquiry_type[3] = '資料請求';
 
-
-$mode = INPUT;
-$temporarily_errormessage = array();
 $error_message = array();
-// TODO クラス化検討
-if (isset($_POST[BACK]) && $_POST[BACK]) {
-  $mode = INPUT;
 
-  // 何もしない
-} else if (isset($_POST[CONFIRM]) && $_POST[CONFIRM]) {
-  // 確認画面
+if ($action_state_check->check(BACK)) {
+  $mode->setMode(INPUT);
 
-  $temporarily_errormessage[] = $name_error_message_builder->getErrorMessage();
-  $_SESSION[FULL_NAME] = htmlspecialchars($_POST[FULL_NAME], ENT_QUOTES);
+} else if ($action_state_check->check(CONFIRM)) {
+  // エラーメッセージ
 
-  $temporarily_errormessage[] = $mail_error_message_builder->getErrorMessage();
-  $_SESSION[EMAIL] = htmlspecialchars($_POST[EMAIL], ENT_QUOTES);
+  // $temporarily_errormessage[] = $name_error_message_builder->getErrorMessage();
+  // $temporarily_errormessage[] = $mail_error_message_builder->getErrorMessage();
+  // $temporarily_errormessage[] = $inquiry_type_error_message_builder->getErrorMessage();
+  // $temporarily_errormessage[] = $message_error_message_builder->getErrorMessage();
 
-  $temporarily_errormessage[] = $inquiry_type_error_message_builder->getErrorMessage();
-  $_SESSION[INQUIRY_TYPE_KEY] = htmlspecialchars($_POST[INQUIRY_TYPE_KEY], ENT_QUOTES);
-
-  $temporarily_errormessage[] = $message_error_message_builder->getErrorMessage();
-  $_SESSION[INQUIRY_CONTENTS] = htmlspecialchars($_POST[INQUIRY_CONTENTS], ENT_QUOTES);
+  // セッションへの保存
+  // $_SESSION[FULL_NAME] = htmlspecialchars($_POST[FULL_NAME], ENT_QUOTES);
+  // $_SESSION[EMAIL] = htmlspecialchars($_POST[EMAIL], ENT_QUOTES);
+  // $_SESSION[INQUIRY_TYPE_KEY] = htmlspecialchars($_POST[INQUIRY_TYPE_KEY], ENT_QUOTES);
+  // $_SESSION[INQUIRY_CONTENTS] = htmlspecialchars($_POST[INQUIRY_CONTENTS], ENT_QUOTES);
+  $_SESSION = $session_controller->setPostToSession($_POST);
 
   // エラーメッセージの中のnullや空文字を除去する
-  $error_message = array_filter($temporarily_errormessage);
+  $error_message = $error_message_builder->getErrorMessage();
   if ($error_message) {
-    $mode = INPUT;
+    $mode->setMode(INPUT);
   } else {
-    $token = bin2hex(random_bytes(32));
-    $_SESSION[TOKEN] = $token;
-    $mode = CONFIRM;
+    $mode->setMode(CONFIRM);
   }
 
-} else if (isset($_POST[SEND]) && $_POST[SEND]) {
+} else if ($action_state_check->check(SEND)) {
   // 送信ボタンを押したとき
   if ($_POST[TOKEN] != $_SESSION[TOKEN]) {
     $temporarily_errormessage[] = '不正な処理が行われました';
-    $_SESSION = array();
-    $mode = INPUT;
+    $session_controller->reset();
+    $mode->setMode(INPUT);
   } else {
-    // メール関連をコントロールするクラスの作成
-    $mail_controller = new MailControllerClass($inquiry_type);
-    // メール用のメッセージの作成
-    $message = $mail_controller->create_message();
-    // メール送信
-    $mail_controller->send_mail($message);
-
     // $message = "お問い合わせを受け付けました \r\n"
     //   . "名前: " . $_SESSION[FULL_NAME] . "\r\n"
     //   . "email: " . $_SESSION[EMAIL] . "\r\n"
@@ -85,14 +79,20 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
     //   . preg_replace("/\r\n|\r|\n/", "\r\n", $_SESSION[INQUIRY_CONTENTS]);
     // mail($_SESSION[EMAIL], 'お問い合わせありがとうございます', $message);
     // mail('ok919872i@gmail.com', 'お問い合わせありがとうございます', $message);
-    $_SESSION = array();
-    $mode = SEND;
+    $mail_controller = new MailControllerClass($inquiry_type);
+    $message = $mail_controller->createMessage();
+    $mail_controller->sendMail($message);
+
+    $_SESSION = $session_controller->reset();
+    $mode->setMode(SEND);
   }
 } else {
-  $_SESSION[FULL_NAME] = "";
-  $_SESSION[EMAIL] = "";
-  $_SESSION[INQUIRY_TYPE_KEY] = "";
-  $_SESSION[INQUIRY_CONTENTS] = "";
+  // セッションの初期化
+  // $_SESSION[FULL_NAME] = "";
+  // $_SESSION[EMAIL] = "";
+  // $_SESSION[INQUIRY_TYPE_KEY] = "";
+  // $_SESSION[INQUIRY_CONTENTS] = "";
+  $_SESSION = $session_controller->resetWithEmpty();
 }
 ?>
 
@@ -118,7 +118,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
 </head>
 
 <body>
-  <?php if ($mode == INPUT) { ?>
+  <?php if ($mode->get_mode() == INPUT) { ?>
     <!-- 入力画面 -->
     <?php
     if ($error_message) {
@@ -149,7 +149,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
       <div class="button"><input type="submit" name="confirm" value="確認" class="btn btn-primary mb-3 btn-lg" /></div>
 
     </form>
-  <?php } else if ($mode == CONFIRM) { ?>
+  <?php } else if ($mode->get_mode() == CONFIRM) { ?>
       <!-- 確認画面 -->
       <form action="./index.php" method="post">
         <input type="hidden" name="token" value="<?php echo $_SESSION[TOKEN]; ?>">

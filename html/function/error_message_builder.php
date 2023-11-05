@@ -1,5 +1,27 @@
 <?php
 
+class ErrorMessageBuilder {
+  private Array $error_message_builder;
+
+  function __construct()
+  {
+    $this->error_message_builder = array(
+      new NameErrorMessageBuilder,
+      new MailErrorMessageBuilder,
+      new InquiryTypeErrorMessageBuilder,
+      new MessageErrorMessageBuilder,
+    );
+  }
+
+  public function getErrorMessage(): Array {
+    $error_message = array();
+    foreach ($this->error_message_builder as $value) {
+      $error_message[] = $value->getErrorMessage();
+    }
+    return array_filter($error_message);
+  }
+}
+
 // 名前を入れた時にエラーメッセージを返却するクラス
 class NameErrorMessageBuilder
 {

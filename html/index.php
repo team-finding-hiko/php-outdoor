@@ -13,7 +13,6 @@ const SEND = "send";
 // ############################################################################
 session_start();
 
-
 require_once('./function/error_message_builder.php');
 // TODO 引数の設定
 $name_error_message_builder = new NameErrorMessageBuilder;
@@ -130,7 +129,6 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
     }
     ?>
     <?php include './common/weather.php'; ?>
-
 
     <form action="./index.php" method="post">
 

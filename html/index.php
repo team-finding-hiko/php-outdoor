@@ -12,7 +12,6 @@ const TOKEN = "token";
 const SEND = "send";
 // ############################################################################
 session_start();
-// phpinfo();
 
 require_once('./function/error_message_builder.php');
 // TODO 引数の設定
@@ -21,6 +20,7 @@ $mail_error_message_builder = new MailErrorMessageBuilder;
 $inquiry_type_error_message_builder = new InquiryTypeErrorMessageBuilder;
 $message_error_message_builder = new MessageErrorMessageBuilder;
 $inquiry_type = array();
+
 // TODO ENUM化
 $inquiry_type[0] = '種別を選択してください';
 $inquiry_type[1] = '質問';
@@ -95,17 +95,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
   <title>お問い合わせフォーム</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <style>
-    body {
-      padding: 10px;
-      max-width: 600px;
-      margin: 0px auto;
-    }
-
-    div.button {
-      text-align: center;
-    }
-  </style>
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -118,6 +108,7 @@ if (isset($_POST[BACK]) && $_POST[BACK]) {
       echo '</div>';
     }
     ?>
+    <?php include './common/weather.php'; ?>
 
     <form action="./index.php" method="post">
 

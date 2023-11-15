@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+body {
+  padding: 10px;
+  max-width: 600px;
+  margin: 0px auto;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border-width: 1px;
+}
+
+div.button {
+  text-align: center;
+}
